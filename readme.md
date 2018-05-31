@@ -43,7 +43,7 @@ extensions:
     embeddedSvg: Milo\EmbeddedSvg\Extension
 
 embeddedSvg:
-    basePath: %wwwDir%/img
+    baseDir: %wwwDir%/img
 ```
 
 
