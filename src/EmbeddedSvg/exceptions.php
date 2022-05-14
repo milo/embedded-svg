@@ -16,7 +16,10 @@ class RuntimeException extends \RuntimeException implements Exception
 
 class XmlErrorException extends \ErrorException implements Exception
 {
-    private static $handling = [];
+    /**
+     * @var bool[]
+     */
+    private static array $handling = [];
 
     final public function __construct(\LibXMLError $error, self $previous = null)
     {

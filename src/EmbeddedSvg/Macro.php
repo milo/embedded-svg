@@ -13,7 +13,7 @@ use Latte\PhpWriter;
 
 class Macro extends MacroSet
 {
-    private $setting;
+    private MacroSetting $setting;
 
     public function __construct(Compiler $compiler, MacroSetting $setting)
     {
@@ -27,16 +27,16 @@ class Macro extends MacroSet
         $this->setting = $setting;
     }
 
-    public static function install(Compiler $compiler, MacroSetting $setting)
+    public static function install(Compiler $compiler, MacroSetting $setting): void
     {
-        $me = new static($compiler, $setting);
+        $me = new self($compiler, $setting);
         $me->addMacro($setting->macroName, [$me, 'open']);
     }
 
-    public function open(MacroNode $node, PhpWriter $writer)
+    public function open(MacroNode $node, PhpWriter $writer): string
     {
         $file = $node->tokenizer->fetchWord();
-        if ($file === false) {
+        if ($file === null) {
             throw new CompileException('Missing SVG file path.');
         }
 

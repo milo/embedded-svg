@@ -6,13 +6,14 @@ namespace Milo\EmbeddedSvg;
 
 use Nette\DI\CompilerExtension;
 use Nette\DI\Definitions;
+use Nette\DI\Definitions\FactoryDefinition;
 
 class Extension extends CompilerExtension
 {
     public function loadConfiguration()
     {
         $definition = $this->getContainerBuilder()->getDefinition('latte.latteFactory');
-        if (class_exists(Definitions\FactoryDefinition::class)) { # Nette DI v3 compatibility
+        if ($definition instanceof FactoryDefinition) {
             $definition = $definition->getResultDefinition();
         }
 

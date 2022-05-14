@@ -36,11 +36,18 @@ class MacroSetting
      */
     public $onLoad = [];
 
-    public function __set($name, $value)
+    /**
+     * @param string $name
+     * @param mixed $value
+     */
+    public function __set($name, $value): void
     {
         throw new \LogicException('Cannot write to an undeclared property ' . static::class . "::\$${name}.");
     }
 
+    /**
+     * @param mixed[] $setting
+     */
     public static function createFromArray(array $setting): self
     {
         $me = new self();
@@ -50,6 +57,10 @@ class MacroSetting
         return $me;
     }
 
+    /**
+     * @param string $name
+     * @return mixed
+     */
     public function &__get($name)
     {
         throw new \LogicException('Cannot read an undeclared property ' . static::class . "::\$${name}.");
