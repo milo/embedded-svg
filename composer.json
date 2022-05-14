@@ -18,6 +18,11 @@
 		"latte/latte": "^2.11|^3.0"
 	},
 	"autoload": {
-		"classmap": ["src/"]
+		"psr-4": {
+			"Milo\\": "src"
+		},
+		"files": [
+			"src/EmbeddedSvg/exceptions.php"
+		]
 	}
 }
