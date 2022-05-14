@@ -14,7 +14,8 @@
 	"require": {
 		"php": ">=7.1.0",
 		"ext-dom": "*",
-		"latte/latte": "^2.4.0"
+		"nette/di": "^3.0",
+		"latte/latte": "^2.11|^3.0"
 	},
 	"autoload": {
 		"classmap": ["src/"]
