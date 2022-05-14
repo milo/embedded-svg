@@ -20,10 +20,7 @@
 	"autoload": {
 		"psr-4": {
 			"Milo\\": "src"
-		},
-		"files": [
-			"src/EmbeddedSvg/exceptions.php"
-		]
+		}
 	},
 	"require-dev": {
 		"phpstan/phpstan": "^1.6",
