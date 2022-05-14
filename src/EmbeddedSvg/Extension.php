@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Milo\EmbeddedSvg;
 
 use Nette\DI\CompilerExtension;
-use Nette\DI\Definitions;
 use Nette\DI\Definitions\FactoryDefinition;
+use Nette\DI\Definitions\ServiceDefinition;
 
 class Extension extends CompilerExtension
 {
@@ -15,6 +15,10 @@ class Extension extends CompilerExtension
         $definition = $this->getContainerBuilder()->getDefinition('latte.latteFactory');
         if ($definition instanceof FactoryDefinition) {
             $definition = $definition->getResultDefinition();
+        }
+
+        if (! $definition instanceof ServiceDefinition) {
+            return;
         }
 
         $definition

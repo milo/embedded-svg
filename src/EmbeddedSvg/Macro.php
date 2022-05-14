@@ -49,8 +49,11 @@ class Macro extends MacroSet
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->preserveWhiteSpace = false;
         @$dom->load($path, $this->setting->libXmlOptions);  # @ - triggers warning on empty XML
-        if ($e = XmlErrorException::catch()) {
-            throw new CompileException("Failed to load SVG content from '${path}'.", 0, $e);
+
+        $xmlErrorException = XmlErrorException::catch();
+
+        if ($xmlErrorException instanceof XmlErrorException) {
+            throw new CompileException("Failed to load SVG content from '${path}'.", 0, $xmlErrorException);
         }
         foreach ($this->setting->onLoad as $cb) {
             $cb($dom, $this->setting);
