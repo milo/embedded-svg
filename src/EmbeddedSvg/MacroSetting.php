@@ -27,7 +27,7 @@ class MacroSetting
     public $prettyOutput = false;
 
     /**
-     * @var array
+     * @var mixed[]
      */
     public $defaultAttributes = [];
 
