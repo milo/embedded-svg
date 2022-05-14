@@ -32,4 +32,3 @@ class XmlErrorException extends \ErrorException implements Exception
         return $e;
     }
 }
-
