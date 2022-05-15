@@ -12,6 +12,10 @@ use Nette\Utils\FileSystem;
 use Nette\Utils\Finder;
 use Nette\Utils\Strings;
 use PHPUnit\Framework\TestCase;
+use Symplify\EasyTesting\DataProvider\StaticFixtureFinder;
+use Symplify\EasyTesting\DataProvider\StaticFixtureUpdater;
+use Symplify\EasyTesting\StaticFixtureSplitter;
+use Symplify\SmartFileSystem\SmartFileInfo;
 
 final class EmbeddedMacroTest extends TestCase
 {
@@ -27,38 +31,37 @@ final class EmbeddedMacroTest extends TestCase
 
         $this->latteEngine = $latteFactory->create();
         $this->latteEngine->setLoader(new StringLoader());
-
-        // prepare empty directory for img files - this parameter is defined in "baseDir" parameter
-        // @see tests/config/test_config.neon:5
-        FileSystem::createDir(__DIR__ . '/../temp/img');
     }
 
     /**
      * @dataProvider provideData()
      */
-    public function test(string $inputLatteContent, string $expectedCompiledPhpContent): void
+    public function test(SmartFileInfo $fixtureFileInfo): void
     {
+        $inputAndExpected = StaticFixtureSplitter::splitFileInfoToInputAndExpected($fixtureFileInfo);
+        $inputLatteContent = $inputAndExpected->getInput();
+        $expectedCompiledPhpContent = $inputAndExpected->getExpected();
+
+        //  string $inputLatteContent, string $expectedCompiledPhpContent
         $compiledPhpCode = $this->latteEngine->compile($inputLatteContent);
 
         // use tabs to unite editorconfig
         $compiledPhpCode = Strings::replace($compiledPhpCode, "#\t#", '    ');
+
+        // update tests on change
+        StaticFixtureUpdater::updateFixtureContent(
+            $inputLatteContent,
+            $compiledPhpCode,
+            $fixtureFileInfo
+        );
 
         $this->assertStringMatchesFormat($expectedCompiledPhpContent, $compiledPhpCode);
     }
 
     public function provideData(): Iterator
     {
-        $finder = Finder::findFiles('*.latte')
-            ->in(__DIR__ . '/Fixture');
-
-        /** @var \SplFileInfo[] $fileInfos */
-        $fileInfos = iterator_to_array($finder->getIterator());
-
-        foreach ($fileInfos as $fileInfo) {
-            $fileContent = FileSystem::read($fileInfo->getRealPath());
-
-            [$inputLatteContent, $expectedCompiledPhpContent] = explode("-----\n", $fileContent);
-            yield [$inputLatteContent, $expectedCompiledPhpContent];
-        }
+        // @see https://github.com/symplify/easy-testing
+        // @see https://tomasvotruba.com/blog/2020/07/20/how-to-update-hundreds-of-test-fixtures-with-single-phpunit-run/
+        return StaticFixtureFinder::yieldDirectory(__DIR__ . '/Fixture', '*.latte');
     }
 }

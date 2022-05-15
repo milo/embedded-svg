@@ -2,4 +2,4 @@ extensions:
     embeddedSvg: Milo\EmbeddedSvg\Extension
 
 embeddedSvg:
-    baseDir: %appDir%/../temp/img
+    baseDir: %appDir%/../tests/Source

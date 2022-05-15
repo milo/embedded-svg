@@ -21,7 +21,8 @@
         "phpunit/phpunit": "^9.5",
         "nette/bootstrap": "^3.1",
         "tracy/tracy": "^2.9",
-        "nette/application": "^3.1"
+        "nette/application": "^3.1",
+        "symplify/easy-testing": "^10.2"
     },
     "autoload": {
         "psr-4": {
