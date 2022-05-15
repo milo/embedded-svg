@@ -1,0 +1,5 @@
+extensions:
+    embeddedSvg: Milo\EmbeddedSvg\Extension
+
+embeddedSvg:
+    baseDir: %appDir%/../temp/img

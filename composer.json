@@ -15,14 +15,23 @@
         "nette/di": "^3.0.13",
         "latte/latte": "^2.11"
     },
+    "require-dev": {
+        "phpstan/phpstan": "^1.6.8",
+        "symplify/easy-coding-standard": "^10.2",
+        "phpunit/phpunit": "^9.5",
+        "nette/bootstrap": "^3.1",
+        "tracy/tracy": "^2.9",
+        "nette/application": "^3.1"
+    },
     "autoload": {
         "psr-4": {
             "Milo\\EmbeddedSvg\\": "src"
         }
     },
-    "require-dev": {
-        "phpstan/phpstan": "^1.6.8",
-        "symplify/easy-coding-standard": "^10.2"
+    "autoload-dev": {
+        "psr-4": {
+            "Milo\\EmbeddedSvg\\Tests\\": "tests"
+        }
     },
     "scripts": {
         "check-cs": "vendor/bin/ecs --ansi",
