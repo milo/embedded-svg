@@ -6,9 +6,7 @@ namespace Milo\EmbeddedSvg\Tests;
 
 use Latte\Engine;
 use Latte\Loaders\StringLoader;
-use Nette\Bootstrap\Configurator;
 use Nette\Bridges\ApplicationLatte\LatteFactory;
-use Nette\DI\Container;
 use Nette\Utils\FileSystem;
 use Nette\Utils\Strings;
 use PHPUnit\Framework\TestCase;
@@ -19,7 +17,8 @@ final class EmbeddedMacroTest extends TestCase
 
     protected function setUp(): void
     {
-        $container = $this->createContainerFromConfig(__DIR__ . '/config/test_config.neon');
+        $containerFactory = new ContainerFactory();
+        $container = $containerFactory->createFromConfig(__DIR__ . '/config/test_config.neon');
 
         /** @var LatteFactory $latteFactory */
         $latteFactory = $container->getByType(LatteFactory::class);
@@ -41,14 +40,5 @@ final class EmbeddedMacroTest extends TestCase
         $compiledPhpCode = Strings::replace($compiledPhpCode, "#\t#", '    ');
 
         $this->assertStringMatchesFormatFile(__DIR__ . '/Fixture/expected_simple_value.php.inc', $compiledPhpCode);
-    }
-
-    private function createContainerFromConfig(string $config): Container
-    {
-        $configurator = new Configurator();
-        $configurator->addConfig($config);
-        $configurator->setTempDirectory(__DIR__ . '/../temp');
-
-        return $configurator->createContainer();
     }
 }
