@@ -9,17 +9,8 @@ use Latte\Compiler\Node;
 use Latte\Compiler\Tag;
 use Latte\Extension;
 use LogicException;
-<<<<<<< HEAD
-use Milo\EmbeddedSvg\Latte\Node\EmbeddedSvgNode;
-<<<<<<< HEAD
-use Milo\EmbeddedSvg\MacroSetting;
-=======
 use Milo\EmbeddedSvg\Configuration\MacroSetting;
 use Milo\EmbeddedSvg\Latte\Node\EmbeddedSvgNode;
->>>>>>> dc9f525... fixup! wip
-=======
-use Milo\EmbeddedSvg\Configuration\MacroSetting;
->>>>>>> 7b0e01a... wip
 
 final class EmbeddedLatteExtension extends Extension
 {

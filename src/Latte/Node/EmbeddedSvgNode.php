@@ -9,27 +9,14 @@ use Latte\Compiler\Nodes\Php\Scalar\StringNode;
 use Latte\Compiler\Nodes\StatementNode;
 use Latte\Compiler\PrintContext;
 use Latte\Compiler\Tag;
-<<<<<<< HEAD
-use Milo\EmbeddedSvg\Exception\CompileException;
-<<<<<<< HEAD
-use Milo\EmbeddedSvg\MacroSetting;
-use Milo\EmbeddedSvg\XmlErrorException;
-=======
 use Milo\EmbeddedSvg\Configuration\MacroSetting;
 use Milo\EmbeddedSvg\Exception\CompileException;
 use Milo\EmbeddedSvg\Exception\XmlErrorException;
->>>>>>> dc9f525... fixup! wip
-=======
-use Milo\EmbeddedSvg\Configuration\MacroSetting;
-use Milo\EmbeddedSvg\Exception\XmlErrorException;
->>>>>>> 7b0e01a... wip
 
 /**
  * @see https://github.com/nette/application/commit/7bfe14fd214c728cec1303b7b486b2f1e4dc4c43#diff-4962238ef3db33964744f40410cbdbc9d50b4b1620725ddf6ff34701c64bc51fR25
  *
  * {embeddedSvg "some.svg" [,] [params]}
- *
- * Replacement for @see \Milo\EmbeddedSvg\Macro
  */
 final class EmbeddedSvgNode extends StatementNode
 {
@@ -37,20 +24,11 @@ final class EmbeddedSvgNode extends StatementNode
 
     private ArrayNode $argsArrayNode;
 
-<<<<<<< HEAD
-    public function __construct(Tag $tag, private MacroSetting $macroSetting)
-    {
-<<<<<<< HEAD
-=======
     public function __construct(
         Tag $tag,
         private MacroSetting $macroSetting
     ) {
         // node requires at least 1 argument, the filename
->>>>>>> dc9f525... fixup! wip
-=======
-        // node requires at least 1 argument, the filename
->>>>>>> 7b0e01a... wip
         $tag->expectArguments();
 
         $this->svgFilepath = $this->resolveCompleteFilePath($tag, $macroSetting);
@@ -61,6 +39,7 @@ final class EmbeddedSvgNode extends StatementNode
 
     public function print(PrintContext $context): string
     {
+        // @todo extract to own XML factory
         XmlErrorException::try();
         $domDocument = new \DOMDocument('1.0', 'UTF-8');
         $domDocument->preserveWhiteSpace = false;
@@ -78,52 +57,36 @@ final class EmbeddedSvgNode extends StatementNode
             $callback($domDocument, $this->macroSetting);
         }
 
-        if (strtolower($domDocument->documentElement->nodeName) !== 'svg') {
+        /** @var \DOMElement $documentElement */
+        $documentElement = $domDocument->documentElement;
+
+        if (strtolower($documentElement->nodeName) !== 'svg') {
             throw new CompileException("Sorry, only <svg> (non-prefixed) root element is supported but {$domDocument->documentElement->nodeName} is used. You may open feature request.");
         }
 
         $svgAttributes = [
-            'xmlns' => $domDocument->documentElement->namespaceURI,
+            'xmlns' => $documentElement->namespaceURI,
         ];
 
-        foreach ($domDocument->documentElement->attributes as $attribute) {
+        foreach ($documentElement->attributes as $attribute) {
             $svgAttributes[$attribute->name] = $attribute->value;
         }
 
-        $inner = '';
+        $innerSvgContent = '';
         $domDocument->formatOutput = $this->macroSetting->prettyOutput;
-        foreach ($domDocument->documentElement->childNodes as $childNode) {
-            $inner .= $domDocument->saveXML($childNode);
+        foreach ($documentElement->childNodes as $childNode) {
+            $innerSvgContent .= $domDocument->saveXML($childNode);
         }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-        $svgAttributes = [];
+        $svgAttributes += $this->macroSetting->defaultAttributes;
+
+        // there might be better way to do this, but could not find it yet
+        $staticArgumentsString = $this->createStaticArgumentString($svgAttributes);
 
         return $context->format(
-<<<CODE
-    printf('<svg "%s"
-        			foreach (%0.raw + %1.var as $n => $v) {
-        				if ($v === null || $v === false) {
-        					continue;
-        				} elseif ($v === true) {
-        					echo " " . %escape($n);
-        				} else {
-        					echo " " . %escape($n) . "=\"" . %escape($v) . "\"";
-        				}
-        			};
-        			">" . %2.var . "</svg>";
-CODE,
-                    $this->argsArrayNode,
-                    $this->macroSetting->defaultAttributes + $svgAttributes,
-=======
-        return $context->format(
             <<<'MACRO_CONTENT'
-=======
-        return $context->format(<<<'MACRO_CONTENT'
->>>>>>> 7b0e01a... wip
-echo "<svg ";
-    foreach ([] as $key => $value) {
+echo "<svg";
+    foreach (%raw + %raw as $key => $value) {
         if ($value === null || $value === false) {
             continue;
         } elseif ($value === true) {
@@ -132,15 +95,11 @@ echo "<svg ";
             echo " " . LR\Filters::escapeHtmlText($key) . "=\"" . LR\Filters::escapeHtmlText($value) . "\"";
         }
       };
-echo ">%raw</svg>;"
+echo ">%raw</svg>";
 MACRO_CONTENT,
-//                    $this->argsArrayNode->items ,
-                    //$this->macroSetting->defaultAttributes + $svgAttributes,
-<<<<<<< HEAD
->>>>>>> dc9f525... fixup! wip
-=======
->>>>>>> 7b0e01a... wip
-                    $inner
+            $this->argsArrayNode,
+            $staticArgumentsString,
+            $innerSvgContent
         );
     }
 
@@ -160,5 +119,22 @@ MACRO_CONTENT,
         }
 
         return $absoluteFilename;
+    }
+
+    /**
+     * @param array<string, mixed> $svgAttributes
+     */
+    private function createStaticArgumentString(array $svgAttributes): string
+    {
+        $staticArguments = $this->macroSetting->defaultAttributes + $svgAttributes;
+
+        $staticArgumentsString = '[';
+        foreach ($staticArguments as $key => $value) {
+            $staticArgumentsString .= "'" . $key . "' => '" . $value . "', ";
+        }
+
+        $staticArgumentsString .= ']';
+
+        return $staticArgumentsString;
     }
 }
