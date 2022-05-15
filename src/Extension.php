@@ -21,6 +21,7 @@ class Extension extends CompilerExtension
             return;
         }
 
+        // @see https://forum.nette.org/cs/35141-latte-3-nejvetsi-vyvojovy-skok-v-dejinach-nette?p=2#p220012
         $definition
             ->addSetup(
                 '?->onCompile[] = function ($engine) { '

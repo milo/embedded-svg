@@ -1,9 +1,7 @@
 {
     "name": "milo/embedded-svg",
-    "type": "library",
     "description": "Latte macro to embed SVG from file into HTML",
-    "keywords": ["nette", "latte", "svg", "embedded", "macro"],
-    "license": ["MIT"],
+    "license": "MIT",
     "authors": [
         {
             "name": "Miloslav Hůla",
@@ -15,7 +13,7 @@
         "php": "^8.0",
         "ext-dom": "*",
         "nette/di": "^3.0.13",
-        "latte/latte": "^3.0-RC"
+        "latte/latte": "^2.11"
     },
     "autoload": {
         "psr-4": {
@@ -23,7 +21,7 @@
         }
     },
     "require-dev": {
-        "phpstan/phpstan": "^1.6",
+        "phpstan/phpstan": "^1.6.8",
         "symplify/easy-coding-standard": "^10.2"
     },
     "scripts": {
