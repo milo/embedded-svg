@@ -1,17 +1,17 @@
-{$value}
+{embeddedSvg "some_picture.svg"}
 -----
 <?php
 
 use Latte\Runtime as LR;
 
-final class Template%s extends Latte\Runtime\Template
+/** source: {$value} */
+final class Template7f33c321c6 extends Latte\Runtime\Template
 {
 
     public function main(): array
     {
         extract($this->params);
         echo LR\Filters::escapeHtmlText($value) /* line 1 */;
-        echo "\n";
         return get_defined_vars();
     }
 

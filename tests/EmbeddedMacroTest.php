@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Milo\EmbeddedSvg\Tests;
 
+use Iterator;
 use Latte\Engine;
 use Latte\Loaders\StringLoader;
 use Nette\Bridges\ApplicationLatte\LatteFactory;
@@ -37,17 +38,15 @@ final class EmbeddedMacroTest extends TestCase
      */
     public function test(string $inputLatteContent, string $expectedCompiledPhpContent): void
     {
-        // just testing compilation works
-        $compiledPhpCode = $this->latteEngine->compile('{$value}');
+        $compiledPhpCode = $this->latteEngine->compile($inputLatteContent);
 
         // use tabs to unite editorconfig
         $compiledPhpCode = Strings::replace($compiledPhpCode, "#\t#", '    ');
 
         $this->assertStringMatchesFormat($expectedCompiledPhpContent, $compiledPhpCode);
-//        $this->assertStringMatchesFormatFile(__DIR__ . '/Fixture/expected_simple_value.php.inc', $compiledPhpCode);
     }
 
-    public function provideData(): \Iterator
+    public function provideData(): Iterator
     {
         $finder = Finder::findFiles('*.latte')
             ->in(__DIR__ . '/Fixture');

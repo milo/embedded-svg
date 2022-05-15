@@ -1,4 +1,7 @@
-# Example
+# Embedded Macro for Latte
+
+## Example
+
 ```latte
 <h1>
     Publications
@@ -20,8 +23,7 @@ Result HTML code may look like:
 </h1>
 ```
 
-
-# Purpose
+## Purpose
 
 This is a single purpose helper library with a macro definition for [Latte](https://latte.nette.org/), the PHP templating engine.
 It loads SVG source file and embed it into HTML code in compile time.
@@ -29,15 +31,16 @@ It loads SVG source file and embed it into HTML code in compile time.
 Motivation for this is possibility to stylize SVG by CSS then. It is not (easily)
 possible with SVG linked as an image like `<img src="icons/help.svg">`.
 
+## Installation
 
-# Installation
+Require library:
 
-Require library by [Composer](https://getcomposer.org/):
-```
+```bash
 composer require milo/embedded-svg
 ```
 
 Register extension in your `config.neon` and configure it:
+
 ```neon
 extensions:
     embeddedSvg: Milo\EmbeddedSvg\Extension
