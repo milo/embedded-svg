@@ -23,7 +23,9 @@ final class EmbeddedMacroTest extends TestCase
 
         /** @var LatteFactory $latteFactory */
         $latteFactory = $container->getByType(LatteFactory::class);
+
         $this->latteEngine = $latteFactory->create();
+        $this->latteEngine->setLoader(new StringLoader());
 
         // prepare empty directory for img files
         FileSystem::createDir(__DIR__ . '/../temp/img');
@@ -31,8 +33,6 @@ final class EmbeddedMacroTest extends TestCase
 
     public function test(): void
     {
-        $this->latteEngine->setLoader(new StringLoader());
-
         // just testing compilatoin works
         $compiledPhpCode = $this->latteEngine->compile('{$value}');
 
