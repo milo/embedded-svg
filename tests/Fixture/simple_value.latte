@@ -4,15 +4,15 @@
 
 use Latte\Runtime as LR;
 
-final class Template213140cb46 extends Latte\Runtime\Template
+final class Templatece068e4c49 extends Latte\Runtime\Template
 {
 
-    public function main(): array
+    public function main(array $ʟ_args): void
     {
-        extract($this->params);
+        extract($ʟ_args);
+        unset($ʟ_args);
+
         echo LR\Filters::escapeHtmlText($value) /* line 1 */;
         echo "\n";
-        return get_defined_vars();
     }
-
 }
