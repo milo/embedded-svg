@@ -3,3 +3,7 @@ extensions:
 
 embeddedSvg:
     baseDir: %appDir%/../tests/Source
+
+latte:
+    extensions:
+        - Milo\EmbeddedSvg\Latte\EmbeddedLatteExtension

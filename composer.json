@@ -12,6 +12,7 @@
     "require": {
         "php": "^8.0",
         "ext-dom": "*",
+        "nette/application": "^3.1.6-RC",
         "nette/di": "^3.0.13",
         "latte/latte": "^3.0-RC"
     },
