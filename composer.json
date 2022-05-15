@@ -15,7 +15,7 @@
         "php": "^8.0",
         "ext-dom": "*",
         "nette/di": "^3.0.13",
-        "latte/latte": "^2.11|^3.0"
+        "latte/latte": "^3.0-RC"
     },
     "autoload": {
         "psr-4": {
