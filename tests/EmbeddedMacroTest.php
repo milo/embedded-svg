@@ -8,8 +8,6 @@ use Iterator;
 use Latte\Engine;
 use Latte\Loaders\StringLoader;
 use Nette\Bridges\ApplicationLatte\LatteFactory;
-use Nette\Utils\FileSystem;
-use Nette\Utils\Finder;
 use Nette\Utils\Strings;
 use PHPUnit\Framework\TestCase;
 use Symplify\EasyTesting\DataProvider\StaticFixtureFinder;
@@ -39,14 +37,11 @@ final class EmbeddedMacroTest extends TestCase
     public function test(SmartFileInfo $fixtureFileInfo): void
     {
         $inputAndExpected = StaticFixtureSplitter::splitFileInfoToInputAndExpected($fixtureFileInfo);
+
         $inputLatteContent = $inputAndExpected->getInput();
         $expectedCompiledPhpContent = $inputAndExpected->getExpected();
 
-        //  string $inputLatteContent, string $expectedCompiledPhpContent
-        $compiledPhpCode = $this->latteEngine->compile($inputLatteContent);
-
-        // use tabs to unite editorconfig
-        $compiledPhpCode = Strings::replace($compiledPhpCode, "#\t#", '    ');
+        $compiledPhpCode = $this->compileLatteToPhpContent($inputLatteContent);
 
         // update tests on change
         StaticFixtureUpdater::updateFixtureContent(
@@ -63,5 +58,14 @@ final class EmbeddedMacroTest extends TestCase
         // @see https://github.com/symplify/easy-testing
         // @see https://tomasvotruba.com/blog/2020/07/20/how-to-update-hundreds-of-test-fixtures-with-single-phpunit-run/
         return StaticFixtureFinder::yieldDirectory(__DIR__ . '/Fixture', '*.latte');
+    }
+
+    private function compileLatteToPhpContent(string $latteContent): string
+    {
+        //  string $inputLatteContent, string $expectedCompiledPhpContent
+        $compiledPhpCode = $this->latteEngine->compile($latteContent);
+
+        // use spaces to unite all files via .editorconfig
+        return Strings::replace($compiledPhpCode, "#\t#", '    ');
     }
 }
