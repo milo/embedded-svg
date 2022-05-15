@@ -42,19 +42,17 @@ composer require milo/embedded-svg
 Register extension in your `config.neon` and configure it:
 
 ```neon
-extensions:
-    embeddedSvg: Milo\EmbeddedSvg\Extension
-
-embeddedSvg:
-    baseDir: %wwwDir%/img
+latte:
+    extensions:
+        - Milo\EmbeddedSvg\Latte\EmbeddedLatteExtension(baseDir: %wwwDir%/img)
 ```
 
 
 ## Configuration
 
-There are some other optional options:
+There are some optional options:
+
 ```neon
-embeddedSvg:
     # change name of the macro
     macroName: svgIcon
 
@@ -89,8 +87,9 @@ attributes from SVG file in that way.
 
 Callback added into `onLoad` event is called when SVG contents is successfully
 loaded into DOM. Its signature is:
+
 ```php
-function (DOMDocument $dom, Milo\EmbeddedSvg\MacroSetting $setting) {
+function (DOMDocument $dom, \Milo\EmbeddedSvg\MacroSetting $setting) {
     ...
 }
 ```
@@ -99,6 +98,7 @@ function (DOMDocument $dom, Milo\EmbeddedSvg\MacroSetting $setting) {
 ## Caveats & Limitations
 
 Because `embeddedSvg` is a macro, it is compiled into PHP only once and then is cached.
+<<<<<<< HEAD
 So, when you change the macro configuration, probably in NEON, you have to purge
 Latte cache.
 
@@ -106,3 +106,6 @@ Latte cache.
 
 * https://forum.nette.org/cs/35141-latte-3-nejvetsi-vyvojovy-skok-v-dejinach-nette?p=2#p220003
 * https://github.com/nette/application/commit/7bfe14fd214c728cec1303b7b486b2f1e4dc4c43
+=======
+So, when you change the macro configuration, probably in NEON, you have to purge Latte cache.
+>>>>>>> prepare for Latte 3, remove unused exception interface

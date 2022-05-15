@@ -2,19 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Milo\EmbeddedSvg;
+namespace Milo\EmbeddedSvg\Configuration;
 
-class MacroSetting
+final class MacroSetting
 {
     /**
      * @var string
      */
     public $baseDir;
-
-    /**
-     * @var string
-     */
-    public $macroName = 'embeddedSvg';
 
     /**
      * @var int
@@ -37,24 +32,22 @@ class MacroSetting
     public $onLoad = [];
 
     /**
+     * @param array<string, mixed> $settings
+     */
+    public function __construct(array $settings)
+    {
+        foreach ($settings as $property => $value) {
+            $this->{$property} = $value;
+        }
+    }
+
+    /**
      * @param string $name
      * @param mixed $value
      */
     public function __set($name, $value): void
     {
         throw new \LogicException('Cannot write to an undeclared property ' . static::class . "::\$${name}.");
-    }
-
-    /**
-     * @param mixed[] $setting
-     */
-    public static function createFromArray(array $setting): self
-    {
-        $me = new self();
-        foreach ($setting as $property => $value) {
-            $me->{$property} = $value;
-        }
-        return $me;
     }
 
     /**

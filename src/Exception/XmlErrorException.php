@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Milo\EmbeddedSvg;
+namespace Milo\EmbeddedSvg\Exception;
 
-class XmlErrorException extends \ErrorException implements Exception
+final class XmlErrorException extends \ErrorException
 {
     /**
      * @var bool[]
@@ -23,12 +23,14 @@ class XmlErrorException extends \ErrorException implements Exception
 
     public static function catch(): ?self
     {
-        $e = null;
+        $xmlError = null;
+
         foreach (array_reverse(libxml_get_errors()) as $error) {
-            $e = new self($error, $e);
+            $xmlError = new self($error, $xmlError);
         }
+
         libxml_clear_errors();
         libxml_use_internal_errors(array_pop(self::$handling));
-        return $e;
+        return $xmlError;
     }
 }
