@@ -39,7 +39,7 @@ final class EmbeddedMacroTest extends TestCase
         // use tabs to unite editorconfig
         $compiledPhpCode = Strings::replace($compiledPhpCode, "#\t#", '    ');
 
-        $this->assertStringMatchesFormatFile(__DIR__ . '/Fixture/expected_simple_value.php', $compiledPhpCode);
+        $this->assertStringMatchesFormatFile(__DIR__ . '/Fixture/expected_simple_value.php.inc', $compiledPhpCode);
     }
 
     private function createContainerFromConfig(string $config): Container
