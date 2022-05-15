@@ -50,7 +50,7 @@ embeddedSvg:
 ```
 
 
-# Configuration
+## Configuration
 
 There are some other optional options:
 ```neon
@@ -96,8 +96,13 @@ function (DOMDocument $dom, Milo\EmbeddedSvg\MacroSetting $setting) {
 ```
 
 
-# Caveats & Limitations
+## Caveats & Limitations
 
 Because `embeddedSvg` is a macro, it is compiled into PHP only once and then is cached.
 So, when you change the macro configuration, probably in NEON, you have to purge
 Latte cache.
+
+## Resource for Latte 3
+
+* https://forum.nette.org/cs/35141-latte-3-nejvetsi-vyvojovy-skok-v-dejinach-nette?p=2#p220003
+* https://github.com/nette/application/commit/7bfe14fd214c728cec1303b7b486b2f1e4dc4c43
