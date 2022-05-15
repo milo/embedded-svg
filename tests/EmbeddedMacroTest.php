@@ -27,13 +27,14 @@ final class EmbeddedMacroTest extends TestCase
         $this->latteEngine = $latteFactory->create();
         $this->latteEngine->setLoader(new StringLoader());
 
-        // prepare empty directory for img files
+        // prepare empty directory for img files - this parameter is defined in "baseDir" parameter
+        // @see tests/config/test_config.neon:5
         FileSystem::createDir(__DIR__ . '/../temp/img');
     }
 
     public function test(): void
     {
-        // just testing compilatoin works
+        // just testing compilation works
         $compiledPhpCode = $this->latteEngine->compile('{$value}');
 
         // use tabs to unite editorconfig
