@@ -8,6 +8,7 @@ use Latte\Engine;
 use Latte\Loaders\StringLoader;
 use Nette\Bridges\ApplicationLatte\LatteFactory;
 use Nette\Utils\FileSystem;
+use Nette\Utils\Finder;
 use Nette\Utils\Strings;
 use PHPUnit\Framework\TestCase;
 
@@ -31,7 +32,10 @@ final class EmbeddedMacroTest extends TestCase
         FileSystem::createDir(__DIR__ . '/../temp/img');
     }
 
-    public function test(): void
+    /**
+     * @dataProvider provideData()
+     */
+    public function test(string $inputLatteContent, string $expectedCompiledPhpContent): void
     {
         // just testing compilation works
         $compiledPhpCode = $this->latteEngine->compile('{$value}');
@@ -39,6 +43,23 @@ final class EmbeddedMacroTest extends TestCase
         // use tabs to unite editorconfig
         $compiledPhpCode = Strings::replace($compiledPhpCode, "#\t#", '    ');
 
-        $this->assertStringMatchesFormatFile(__DIR__ . '/Fixture/expected_simple_value.php.inc', $compiledPhpCode);
+        $this->assertStringMatchesFormat($expectedCompiledPhpContent, $compiledPhpCode);
+//        $this->assertStringMatchesFormatFile(__DIR__ . '/Fixture/expected_simple_value.php.inc', $compiledPhpCode);
+    }
+
+    public function provideData(): \Iterator
+    {
+        $finder = Finder::findFiles('*.latte')
+            ->in(__DIR__ . '/Fixture');
+
+        /** @var \SplFileInfo[] $fileInfos */
+        $fileInfos = iterator_to_array($finder->getIterator());
+
+        foreach ($fileInfos as $fileInfo) {
+            $fileContent = FileSystem::read($fileInfo->getRealPath());
+
+            [$inputLatteContent, $expectedCompiledPhpContent] = explode("-----\n", $fileContent);
+            yield [$inputLatteContent, $expectedCompiledPhpContent];
+        }
     }
 }
