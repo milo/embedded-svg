@@ -19,7 +19,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Milo\\": "src"
+            "Milo\\EmbeddedSvg\\": "src"
         }
     },
     "require-dev": {
