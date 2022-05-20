@@ -2,6 +2,7 @@
 
 namespace Milo\EmbeddedSvg;
 
+use Latte\Engine;
 use Nette\DI\CompilerExtension;
 use Nette\DI\Definitions;
 
@@ -15,12 +16,20 @@ class Extension extends CompilerExtension
 			$definition = $definition->getResultDefinition();
 		}
 
-		$definition
-			->addSetup('?->onCompile[] = function ($engine) { '
-				. Macro::class . '::install($engine->getCompiler(), '
-				. MacroSetting::class . '::createFromArray(?)'
-				. ');}',
-				['@self', $this->getConfig()]
-			);
+		if (version_compare(Engine::VERSION, '3.0.0', '<')) {
+			$definition
+				->addSetup('?->onCompile[] = function ($engine) { '
+					. Macro::class . '::install($engine->getCompiler(), '
+					. MacroSetting::class . '::createFromArray(?)'
+					. ');}',
+					['@self', $this->getConfig()]
+				);
+		} else {
+			$definition
+				->addSetup(
+					sprintf('?->addExtension(new %s(%s::createFromArray(?)));', LatteExtension::class, MacroSetting::class),
+					['@self', $this->getConfig()]
+				);
+		}
 	}
 }
