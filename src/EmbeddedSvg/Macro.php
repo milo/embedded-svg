@@ -12,16 +12,14 @@ use Latte\PhpWriter;
 
 class Macro extends MacroSet
 {
+	use Helpers;
+
 	private $setting;
 
 
 	public function __construct(Compiler $compiler, MacroSetting $setting)
 	{
-		if (!extension_loaded('dom')) {
-			throw new \LogicException('Missing PHP extension xml.');
-		} elseif (!is_dir($setting->baseDir)) {
-			throw new CompileException("Base directory '$setting->baseDir' does not exist.");
-		}
+		$this->checkRequirements($setting);
 
 		parent::__construct($compiler);
 		$this->setting = $setting;
@@ -42,39 +40,12 @@ class Macro extends MacroSet
 			throw new CompileException('Missing SVG file path.');
 		}
 
-		$path = $this->setting->baseDir . DIRECTORY_SEPARATOR . trim($file, '\'"');
-		if (!is_file($path)) {
-			throw new CompileException("SVG file '$path' does not exist.");
-		}
-
-		XmlErrorException::try();
-		$dom = new DOMDocument('1.0', 'UTF-8');
-		$dom->preserveWhiteSpace = false;
-		@$dom->load($path, $this->setting->libXmlOptions);  # @ - triggers warning on empty XML
-		if ($e = XmlErrorException::catch()) {
-			throw new CompileException("Failed to load SVG content from '$path'.", 0, $e);
-		}
-		foreach ($this->setting->onLoad as $cb) {
-			$cb($dom, $this->setting);
-		}
-
-		if (strtolower($dom->documentElement->nodeName) !== 'svg') {
-			throw new CompileException("Sorry, only <svg> (non-prefixed) root element is supported but {$dom->documentElement->nodeName} is used. You may open feature request.");
-		}
+		$path = $this->getSvgFilePath($this->setting, $file);
+		$dom = $this->loadSvgDom($this->setting, $path);
+		$svgAttributes = $this->getSvgTagAttributes($dom);
+		$inner = $this->extractInnerXml($this->setting, $dom);
 
 		$macroAttributes = $writer->formatArray();
-		$svgAttributes = [
-			'xmlns' => $dom->documentElement->namespaceURI,
-		];
-		foreach ($dom->documentElement->attributes as $attribute) {
-			$svgAttributes[$attribute->name] = $attribute->value;
-		}
-
-		$inner = '';
-		$dom->formatOutput = $this->setting->prettyOutput;
-		foreach ($dom->documentElement->childNodes as $childNode) {
-			$inner .= $dom->saveXML($childNode);
-		}
 
 		return $writer->write('
 			echo "<svg";
@@ -86,7 +57,7 @@ class Macro extends MacroSet
 				} else {
 					echo " " . %escape($n) . "=\"" . %escape($v) . "\"";
 				}
-			};
+			}
 			echo ">" . %2.var . "</svg>";
 			',
 			$macroAttributes, $this->setting->defaultAttributes + $svgAttributes, $inner
