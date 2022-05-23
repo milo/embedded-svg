@@ -40,17 +40,9 @@ final class LatteExtension extends Latte\Extension
 				$macroArguments = $tag->parser->parseArguments();
 
 				return new Latte\Compiler\Nodes\AuxiliaryNode(function (Latte\Compiler\PrintContext $context) use ($macroArguments, $svgAttributes, $inner) {
-					$macroAttributes = [];
-					foreach ($macroArguments->toArguments() as $attribute) {
-						$macroAttributes[] = sprintf('%s => %s',
-							var_export($attribute->name->print($context), true),
-							$attribute->value->print($context)
-						);
-					}
-
 					return $context->format('
 						echo "<svg";
-						foreach ([%0.raw] + %1.dump as $n => $v) {
+						foreach (%0.args + %1.dump as $n => $v) {
 							if ($v === null || $v === false) {
 								continue;
 							} elseif ($v === true) {
@@ -60,7 +52,7 @@ final class LatteExtension extends Latte\Extension
 							}
 						}
 						echo ">" . %2.dump . "</svg>";
-					', implode(', ', $macroAttributes), $this->setting->defaultAttributes + $svgAttributes, $inner
+					', [$macroArguments], $this->setting->defaultAttributes + $svgAttributes, $inner
 					);
 				});
 			}
