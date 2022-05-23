@@ -42,15 +42,16 @@ final class LatteExtension extends Latte\Extension
 				return new Latte\Compiler\Nodes\AuxiliaryNode(function (Latte\Compiler\PrintContext $context) use ($macroArguments, $svgAttributes, $inner) {
 					return $context->format('
 						echo "<svg";
-						foreach (%0.args + %1.dump as $n => $v) {
-							if ($v === null || $v === false) {
+						foreach (%0.args + %1.dump as $__n => $__v) {
+							if ($__v === null || $__v === false) {
 								continue;
-							} elseif ($v === true) {
-								echo " " . %escape($n);
+							} elseif ($__v === true) {
+								echo " " . %escape($__n);
 							} else {
-								echo " " . %escape($n) . "=\"" . %escape($v) . "\"";
+								echo " " . %escape($__n) . "=\"" . %escape($__v) . "\"";
 							}
 						}
+						unset($__n, $__v);
 						echo ">" . %2.dump . "</svg>";
 					', [$macroArguments], $this->setting->defaultAttributes + $svgAttributes, $inner
 					);

@@ -49,15 +49,16 @@ class Macro extends MacroSet
 
 		return $writer->write('
 			echo "<svg";
-			foreach (%0.raw + %1.var as $n => $v) {
-				if ($v === null || $v === false) {
+			foreach (%0.raw + %1.var as $__n => $__v) {
+				if ($__v === null || $__v === false) {
 					continue;
-				} elseif ($v === true) {
-					echo " " . %escape($n);
+				} elseif ($__v === true) {
+					echo " " . %escape($__n);
 				} else {
-					echo " " . %escape($n) . "=\"" . %escape($v) . "\"";
+					echo " " . %escape($__n) . "=\"" . %escape($__v) . "\"";
 				}
 			}
+			unset($__n, $__v);
 			echo ">" . %2.var . "</svg>";
 			',
 			$macroAttributes, $this->setting->defaultAttributes + $svgAttributes, $inner
