@@ -18,7 +18,7 @@ class XmlErrorException extends \ErrorException implements Exception
 	private static $handling = [];
 
 
-	final public function __construct(\LibXMLError $error, self $previous = null)
+	final public function __construct(\LibXMLError $error, ?self $previous = null)
 	{
 		parent::__construct(trim($error->message), $error->code, $error->level, $error->file, $error->line, $previous);
 	}
